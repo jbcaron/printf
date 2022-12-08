@@ -6,16 +6,27 @@
 #    By: jcaron <jcaron@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 18:26:57 by jcaron            #+#    #+#              #
-#    Updated: 2022/12/01 13:30:42 by jcaron           ###   ########.fr        #
+#    Updated: 2022/12/08 15:23:26 by jcaron           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC		=	ft_printf.c \
+SRC_D	= 	./source/
+
+SRC		=	$(SRC_D)low_hex_to_buf.c	\
+			$(SRC_D)str_to_buf.c		\
+			$(SRC_D)dec_to_buf.c		\
+			$(SRC_D)ptr_to_buf.c		\
+			$(SRC_D)up_hex_to_buf.c		\
+			$(SRC_D)ft_buffer.c			\
+			$(SRC_D)ft_printf.c			\
+			$(SRC_D)udec_to_buf.c		\
+			$(SRC_D)char_to_buf.c		\
+			$(SRC_D)put_to_hex.c		\
+			$(SRC_D)put_to_dec.c		\
+			$(SRC_D)ft_strlen.c
 
 
-OBJ_D	=	obj
-
-INC_D	=	include
+INC_D	=	./include/
 
 NAME	=	libftprintf.a
 
@@ -23,34 +34,22 @@ NAME	=	libftprintf.a
 
 CC		=	clang
 CFLAG	=	-Wall -Wextra -Werror
-DFLAG	= 	-Weverything -g -fsanitize=address,undefined
+CFLAG	= 	-Weverything -g 
 OBJ 	=	$(SRC:%.c=%.o)
-OBJ_B	=	$(SRC_B:%.c=%.o)
-
-
-ifdef(debug)
-	CFLAG = DFLAG
-endif
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@ar rc $(NAME) $(OBJ_D)$(OBJ)
+	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 	@echo "***creation of library '$(NAME)'***"
 
-%.o: %.c  $(INC) Makefile
-		@mkdir -p $(OBJ_D)
-		@$(CC) $(CFLAG) -c $< -o $@
+%.o: %.c $(INC_D)*.h Makefile
+		@$(CC) $(CFLAG) -I$(INC_D) -c $< -o $@
 		@echo "***compilation of '$<' in '$@'***"
 
-bonus : $(OBJ_B) all
-	@ar rc $(NAME) $(OBJ) $(OBJ_B)
-	@ranlib $(NAME)
-	@echo "***creation of library '$(NAME)' with bonus functions***"
-
 clean:
-	@rm -f $(OBJ_D)$(OBJ)
+	@rm -f $(OBJ)
 	@echo "***delation of all objects files***"
 
 fclean: clean
@@ -59,7 +58,4 @@ fclean: clean
 
 re: fclean all
 
-debug :
-
-
-.PHONY: all clean fclean re debug
+.PHONY: all clean fclean re
